@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'io.gatling.gradle' version '3.10.3'
+}
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+
+gatling {
+    // WARNING: options below only work when logback config file isn't provided
+    logLevel = 'WARN' // logback root level
+    logHttp = 'NONE' // set to 'ALL' for all HTTP traffic in TRACE, 'FAILURES' for failed HTTP traffic in DEBUG
+    enterprise {
+        // Enterprise Cloud (https://cloud.gatling.io/) configuration reference: https://gatling.io/docs/gatling/reference/current/extensions/gradle_plugin/#working-with-gatling-enterprise-cloud
+        // Enterprise Self-Hosted configuration reference: https://gatling.io/docs/gatling/reference/current/extensions/gradle_plugin/#working-with-gatling-enterprise-self-hosted
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//
+//sourceSets {
+//    gatling {
+//        java.srcDirs = ["src/main/java/simulations"]
+//    }
+//}
