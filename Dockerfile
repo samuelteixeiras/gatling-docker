@@ -1,7 +1,7 @@
 FROM gradle:latest AS BUILD
-ENV APP_HOME=/gatling
-WORKDIR $APP_HOME
-COPY src/ $APP_HOME/src
-COPY gradle/ $APP_HOME/gradle
-COPY build.gradle settings.gradle gradlew  $APP_HOME/
+ENV HOME_DIR=/gatling
+WORKDIR $HOME_DIR
+COPY src/ $HOME_DIR/src
+COPY gradle/ $HOME_DIR/gradle
+COPY build.gradle settings.gradle gradlew $HOME_DIR/
 RUN gradle build -x test || return 0
