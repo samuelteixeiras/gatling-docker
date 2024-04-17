@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: api-load-test
+  namespace: api-load-test
+spec:
+  backoffLimit: 1
+  parallelism: 5
+  completions: 5
+  template:
+    metadata:
+      labels:
+        name: api-load-test
+    spec:
+      containers:
+        - image: gatling-docker:v1
+          name: api-load-test-docker
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              gradle gatlingRun  && gradle uploadReportsToAWS
+          volumeMounts:
+            - name: aws-credentials-volume
+              mountPath: "/root/.aws"
+              readOnly: true
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2500Mi
+            requests:
+              cpu: 500m
+              memory: 2500Mi
+          envFrom:
+            - configMapRef:
+                name: api-load-test-config
+      restartPolicy: Never
+      volumes:
+        - name: aws-credentials-volume
+          secret:
+            secretName: aws-credentials-api-load-test
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-load-test-config
+  namespace: api-load-test
+
