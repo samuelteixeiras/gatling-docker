@@ -4,11 +4,15 @@ plugins {
 }
 group = 'org.example'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
+    maven { url "https://repo.maven.apache.org/maven2" }
 }
 
 
@@ -23,6 +27,7 @@ gatling {
 }
 
 dependencies {
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.781'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
@@ -31,9 +36,9 @@ test {
     useJUnitPlatform()
 }
 
-//
-//sourceSets {
-//    gatling {
-//        java.srcDirs = ["src/main/java/simulations"]
-//    }
-//}
+task uploadReportsToAWS(type: JavaExec) {
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'utils.AWSUploader'
+}
+
